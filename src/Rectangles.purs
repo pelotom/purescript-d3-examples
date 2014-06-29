@@ -9,7 +9,8 @@ drawRects array =
       attr "height" 500
       attr "fill" "gray"
     selectAll ".others" $ bind array do
-      enter do
+      enter $ append "g" do
+        attr "opacity" 0
         append "rect" do
           attr "class" "others"
           attr "fill" \d -> if d > 4 then "blue" else "red"
@@ -24,6 +25,7 @@ drawRects array =
           attr "cy" \d -> d * 20
           attr "r" 10
           attr "fill" "green"
+        transition $ attr "opacity" 1
       exit $ transition do
         attr "opacity" 0
         remove
