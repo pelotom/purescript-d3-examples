@@ -1,0 +1,9 @@
+{
+  "name": "purescript-d3-examples",
+  "private": true,
+  "ignore": [],
+  "dependencies":
+  { "d3"            : "~3.4.8"
+  , "purescript-d3" : "file:///Users/tom/code/purescript-d3#master"
+  }
+}
