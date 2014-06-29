@@ -19,11 +19,15 @@ var paths = {
 	]
 };
 
-gulp.task('clean', function (cb) {
+gulp.task('cleanBuild', function (cb) {
   return rimraf('build/', cb);
 });
 
-gulp.task('compile', ['clean'], function() {
+gulp.task('cleanApp', function (cb) {
+  return rimraf('app/**/*.html', cb);
+});
+
+gulp.task('compile', ['cleanBuild'], function() {
 	var psc = purescript.pscMake({
 		// Compiler options
 		output: paths.dest
@@ -55,7 +59,7 @@ gulp.task('copy-d3', function() {
   return gulp.src('bower_components/d3/*.js').pipe(gulp.dest('app'));
 });
 
-gulp.task('copy-htmls', ['browserify'], function () {
+gulp.task('copy-htmls', ['cleanApp', 'browserify'], function () {
   return gulp.src('htmls/**/*').pipe(gulp.dest('app'));
 });
 
