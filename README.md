@@ -1,6 +1,6 @@
 # purescript-d3-examples
 
-Examples of using the [purescript-d3](http://github.com/pelotom/purescript-d3) library to make D3 visualizations in PureScript.
+Examples of using [purescript-d3](http://github.com/pelotom/purescript-d3) to make D3 visualizations in PureScript.
 
 ### Development
 
