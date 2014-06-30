@@ -1,14 +1,8 @@
 module Graphics.D3.Examples.LetsMakeABarChart where
 
-import Debug.Trace
-
 import Graphics.D3.Util
 import Graphics.D3.Selection
 import Graphics.D3.Scale
-
-foreign import showAny
-  "function showAny(d) { return d; }"
-  :: forall a. a -> String
 
 {- 
   This is a PureScript adaptation of Mike Bostock's "Let's Make a Bar Chart" series
