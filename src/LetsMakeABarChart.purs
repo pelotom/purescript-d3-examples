@@ -2,7 +2,6 @@ module Graphics.D3.Examples.LetsMakeABarChart where
 
 import Debug.Trace
 
-import Graphics.D3.Base
 import Graphics.D3.Util
 import Graphics.D3.Selection
 import Graphics.D3.Scale
@@ -34,13 +33,18 @@ foreign import showAny
       .style("width", function(d) { return x(d) + "px"; })
       .text(function(d) { return d; });
 -}
-bar1 = do
+barChart1 = do
   let table = [4, 8, 15, 16, 23, 42]
+
   x <- linearScale
-    |. domain 0 (max table)
-    |. range 0 420
-    |. freeze
-  select ".chart" do
-    selectAll "div" $ bind table $ enter $ append "div" do
-      attr "style" \d -> "width:" ++ show (x d) ++ "px"
-      text \d -> d
+    .. domain [0, max table]
+    .. range [0, 420]
+    .. freeze
+
+  rootSelect ".chart"
+    .. selectAll "div"
+      .. bind table
+    .. enter .. append "div"
+      .. style "width" (\d -> show (x d) ++ "px")
+      .. text (\d -> d)
+
