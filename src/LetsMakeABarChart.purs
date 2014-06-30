@@ -40,5 +40,5 @@ barChart1 = do
       .. bind table
     .. enter .. append "div"
       .. style "width" (\d -> show (x d) ++ "px")
-      .. text (\d -> d)
+      .. text show
 
