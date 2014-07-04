@@ -4,6 +4,6 @@
   "ignore": [],
   "dependencies":
   { "d3"            : "~3.4.8"
-  , "purescript-d3" : "file:///Users/tom/code/purescript-d3#master"
+  , "purescript-d3" : "git@github.com:pelotom/purescript-d3.git#master"
   }
 }
