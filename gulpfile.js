@@ -17,10 +17,6 @@ var paths = {
 	]
 };
 
-gulp.task('clean-htmls', function (cb) {
-  rimraf('app/**/*.html', cb);
-});
-
 gulp.task('compile', function(cb) {
 	var psc = purescript.psc({
 		// Compiler options
@@ -43,11 +39,15 @@ gulp.task('copy-d3', function() {
   return gulp.src('bower_components/d3/*.js').pipe(gulp.dest('app'));
 });
 
+gulp.task('clean-htmls', function (cb) {
+  rimraf('app/**/*.html', cb);
+});
+
 gulp.task('copy-htmls', ['clean-htmls'], function () {
   return gulp.src('htmls/**/*').pipe(gulp.dest('app'));
 });
 
-gulp.task('connect', ['copy-d3', 'copy-htmls'], function() {
+var connectTask = gulp.task('connect', ['copy-d3', 'copy-htmls', 'compile'], function() {
   connect.server({
     root: 'app',
     port: 8083,
@@ -59,13 +59,27 @@ gulp.task('reload', ['compile', 'copy-htmls'], function () {
   gulp.src(paths.htmls).pipe(connect.reload());
 });
 
-gulp.task('watch', ['connect'], function() {
+gulp.task('watch', function(cb) {
   var allSrcs = paths.purescripts
     .concat(paths.bowerSrc)
     .concat(paths.javascripts)
     .concat(paths.htmls)
     ;
-	gulp.watch(allSrcs, ['reload']);
+  doConnect();
+  gulp.watch(allSrcs, function() {
+    if (connected)
+      gulp.start('reload');
+    else
+      doConnect();
+  });
+
+  var connected = false;
+  function doConnect() {
+    gulp.start('connect').on('task_stop', function(event) {
+      if (event.task === 'connect')
+        connected = true;
+    });
+  }
 });
 
 gulp.task('default', ['watch']);
