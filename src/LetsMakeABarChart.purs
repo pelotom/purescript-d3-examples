@@ -41,4 +41,3 @@ barChart1 = do
     .. enter .. append "div"
       .. style "width" (\d -> show (x d) ++ "px")
       .. text show
-

@@ -2,7 +2,6 @@
 
 var gulp      	= require('gulp')
   , purescript 	= require('gulp-purescript')
-	, browserify 	= require('gulp-browserify')
 	, rimraf 			= require('rimraf')
   , connect     = require('gulp-connect')
   ;
@@ -13,53 +12,38 @@ var paths = {
 	purescripts: ['src/*.purs'],
 	javascripts: ['src/' + jsFileName],
   htmls: ['htmls/**/*'],
-	dest: 'build/node_modules',
 	bowerSrc: [
 	  'bower_components/purescript-*/src/**/*.purs'
 	]
 };
 
-gulp.task('cleanBuild', function (cb) {
-  return rimraf('build/', cb);
+gulp.task('clean-htmls', function (cb) {
+  rimraf('app/**/*.html', cb);
 });
 
-gulp.task('cleanApp', function (cb) {
-  return rimraf('app/**/*.html', cb);
-});
-
-gulp.task('compile', ['cleanBuild'], function() {
-	var psc = purescript.pscMake({
+gulp.task('compile', function(cb) {
+	var psc = purescript.psc({
 		// Compiler options
-		output: paths.dest
+		output: "examples.js",
+    module: "Graphics.D3.Examples"
 	});
-	psc.on('error', function(e) {
-		console.error(e.message);
-		psc.end();
-	});
-	return gulp.src(paths.purescripts.concat(paths.bowerSrc)).pipe(psc)
-});
-
-gulp.task('preBrowserify', ['compile'], function() {
-	// Copy examples.js into the build directory
-	return gulp.src('src/' + jsFileName).pipe(gulp.dest('build'));
-});
-
-gulp.task('browserify', ['preBrowserify'], function() {
-  // Single entry point to browserify
-  return gulp.src(['build/' + jsFileName])
-    .pipe(browserify({
-    	standalone: 'examples'
-      // insertGlobals : true,
-      // debug : !gulp.env.production
-    }))
-    .pipe(gulp.dest('app'));
+  psc.on('error', function(e) {
+    cb(e.message); // Build failed
+  });
+  gulp.src(paths.purescripts.concat(paths.bowerSrc))
+    .pipe(psc)
+    .pipe(gulp.dest("app"))
+    .on('data', function () {
+      cb(); // Completed successfully
+    })
+    ;
 });
 
 gulp.task('copy-d3', function() {
   return gulp.src('bower_components/d3/*.js').pipe(gulp.dest('app'));
 });
 
-gulp.task('copy-htmls', ['cleanApp', 'browserify'], function () {
+gulp.task('copy-htmls', ['clean-htmls'], function () {
   return gulp.src('htmls/**/*').pipe(gulp.dest('app'));
 });
 
@@ -71,7 +55,7 @@ gulp.task('connect', ['copy-d3', 'copy-htmls'], function() {
   });
 });
 
-gulp.task('reload', ['browserify', 'copy-htmls'], function () {
+gulp.task('reload', ['compile', 'copy-htmls'], function () {
   gulp.src(paths.htmls).pipe(connect.reload());
 });
 
