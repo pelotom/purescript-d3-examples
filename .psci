@@ -1,0 +1,6 @@
+:m src/LetsMakeABarChart.purs
+:m bower_components/purescript-d3/src/Base.purs
+:m bower_components/purescript-d3/src/Selection.purs
+:m bower_components/purescript-d3/src/Scale.purs
+:m bower_components/purescript-d3/src/Util.purs
+:i Graphics.D3.Examples.LetsMakeABarChart
