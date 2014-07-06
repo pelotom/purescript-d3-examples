@@ -1,9 +1,7 @@
 {
   "name": "purescript-d3-examples",
-  "private": true,
   "ignore": [],
   "dependencies":
-  { "d3"            : "~3.4.8"
-  , "purescript-d3" : "git@github.com:pelotom/purescript-d3.git#master"
+  { "purescript-d3" : "^0.1.1"
   }
 }

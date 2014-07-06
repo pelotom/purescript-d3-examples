@@ -1,6 +1,5 @@
 {
   "name": "purescript-d3-examples",
-  "version": "0.0.0",
   "description": "PureScript + D3 examples",
   "license": "MIT",
   "devDependencies": {
