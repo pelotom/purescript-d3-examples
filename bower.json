@@ -2,6 +2,6 @@
   "name": "purescript-d3-examples",
   "ignore": [],
   "dependencies":
-  { "purescript-d3" : "^0.1.1"
+  { "purescript-d3" : "*"
   }
 }
