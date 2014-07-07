@@ -29,15 +29,12 @@ height = 500 - margin.top - margin.bottom
 letter x = x.letter
 frequency x = x.frequency
 
-main = tsv "data/lettersAndFrequencies.tsv" \(Right array) -> do
-  typedData <- traverse coerceLetterAndFrequency array
+main = do
 
   xScale <- ordinalScale
-    .. domain (letter <$> typedData)
     .. rangeRoundBands 0 width 0.1 0
 
   yScale <- linearScale
-    .. domain [0, maxBy frequency typedData]
     .. range [height, 0]
 
   xAxis <- axis
@@ -56,30 +53,36 @@ main = tsv "data/lettersAndFrequencies.tsv" \(Right array) -> do
     .. append "g"
       .. attr "transform" (const $ "translate(" ++ show margin.left ++ "," ++ show margin.top ++ ")")
 
-  svg ... append "g"
-    .. attr "class" (const "x axis")
-    .. attr "transform" (const $ "translate(0," ++ show height ++ ")")
-    .. renderAxis xAxis
+  tsv "data/lettersAndFrequencies.tsv" \(Right array) -> do
+    typedData <- traverse coerceLetterAndFrequency array
 
-  svg ... append "g"
-      .. attr "class" (const "y axis")
-      .. renderAxis yAxis
-    .. append "text"
-      .. attr "transform" (const "rotate(-90)")
-      .. attr "y" (const 6)
-      .. attr "dy" (const ".71em")
-      .. style "text-anchor" (const "end")
-      .. text (const "Frequency")
+    xScale ... domain (letter <$> typedData)
+    yScale ... domain [0, maxBy frequency typedData]
 
-  x <- freeze xScale
-  y <- freeze yScale
-  barWidth <- rangeBand xScale
+    x <- freeze xScale
+    y <- freeze yScale
+    barWidth <- rangeBand xScale
 
-  svg ... selectAll ".bar"
-      .. bind typedData
-    .. enter .. append "rect"
-      .. attr "class" (const "bar")
-      .. attr "x" (x <<< letter)
-      .. attr "width" (const barWidth)
-      .. attr "y" (y <<< frequency)
-      .. attr "height" (\d -> height - y d.frequency)
+    svg ... append "g"
+      .. attr "class" (const "x axis")
+      .. attr "transform" (const $ "translate(0," ++ show height ++ ")")
+      .. renderAxis xAxis
+
+    svg ... append "g"
+        .. attr "class" (const "y axis")
+        .. renderAxis yAxis
+      .. append "text"
+        .. attr "transform" (const "rotate(-90)")
+        .. attr "y" (const 6)
+        .. attr "dy" (const ".71em")
+        .. style "text-anchor" (const "end")
+        .. text (const "Frequency")
+
+    svg ... selectAll ".bar"
+        .. bind typedData
+      .. enter .. append "rect"
+        .. attr "class" (const "bar")
+        .. attr "x" (x <<< letter)
+        .. attr "width" (const barWidth)
+        .. attr "y" (y <<< frequency)
+        .. attr "height" (\d -> height - y d.frequency)

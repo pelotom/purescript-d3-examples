@@ -20,6 +20,7 @@ import Graphics.D3.SVG.Axis
 table = [4, 8, 15, 16, 23, 42]
 
 main = do
+
   x <- linearScale
     .. domain [0, max table]
     .. range [0, 420]

@@ -24,29 +24,34 @@ coerceNameAndValue = unsafeForeignFunction ["x", ""] "{ name: x.name, value: Num
 
 width = 420
 barHeight = 20
-chart = rootSelect ".chart" .. attr "width" (const width)
 
-main = tsv "data/namesAndNumbers.tsv" \(Right array) -> do
-  typedData <- traverse coerceNameAndValue array
+main = do
 
-  x <- linearScale
-    .. domain [0, maxBy (\d -> d.value) typedData]
+  xScale <- linearScale
     .. range [0, width]
-    .. freeze
 
-  chart .. attr "height" (const $ barHeight * length typedData)
+  chart <- rootSelect ".chart"
+    .. attr "width" (const width)
 
-  bar <- chart .. selectAll "g"
-      .. bind typedData
-    .. enter .. append "g"
-      .. attr' "transform" (\_ i -> "translate(0," ++ show (i * barHeight) ++ ")")
+  tsv "data/namesAndNumbers.tsv" \(Right array) -> do
+    typedData <- traverse coerceNameAndValue array
 
-  bar ... append "rect"
-    .. attr "width" (\d -> x d.value)
-    .. attr "height" (const $ barHeight - 1)
+    xScale ... domain [0, maxBy (\d -> d.value) typedData]
+    x <- freeze xScale
 
-  bar ... append "text"
-    .. attr "x" (\d -> x d.value - 3)
-    .. attr "y" (const $ barHeight / 2)
-    .. attr "dy" (const ".35em")
-    .. text (\d -> show d.value)
+    chart ... attr "height" (const $ barHeight * length typedData)
+
+    bar <- chart ... selectAll "g"
+        .. bind typedData
+      .. enter .. append "g"
+        .. attr' "transform" (\_ i -> "translate(0," ++ show (i * barHeight) ++ ")")
+
+    bar ... append "rect"
+      .. attr "width" (\d -> x d.value)
+      .. attr "height" (const $ barHeight - 1)
+
+    bar ... append "text"
+      .. attr "x" (\d -> x d.value - 3)
+      .. attr "y" (const $ barHeight / 2)
+      .. attr "dy" (const ".35em")
+      .. text (\d -> show d.value)
