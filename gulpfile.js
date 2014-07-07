@@ -11,7 +11,7 @@ var jsFileName = 'examples.js';
 var paths = {
 	purescripts: ['src/*.purs'],
 	javascripts: ['src/' + jsFileName],
-  htmls: ['htmls/**/*'],
+  resources: ['resources/**/*'],
 	bowerSrc: [
 	  'bower_components/purescript-*/src/**/*.purs'
 	]
@@ -39,15 +39,15 @@ gulp.task('copy-d3', function() {
   return gulp.src('bower_components/d3/*.js').pipe(gulp.dest('app'));
 });
 
-gulp.task('clean-htmls', function (cb) {
+gulp.task('clean-resources', function (cb) {
   rimraf('app/**/*.html', cb);
 });
 
-gulp.task('copy-htmls', ['clean-htmls'], function () {
-  return gulp.src('htmls/**/*').pipe(gulp.dest('app'));
+gulp.task('copy-resources', ['clean-resources'], function () {
+  return gulp.src('resources/**/*').pipe(gulp.dest('app'));
 });
 
-var connectTask = gulp.task('connect', ['copy-d3', 'copy-htmls', 'compile'], function() {
+var connectTask = gulp.task('connect', ['copy-d3', 'copy-resources', 'compile'], function() {
   connect.server({
     root: 'app',
     port: 8083,
@@ -55,15 +55,15 @@ var connectTask = gulp.task('connect', ['copy-d3', 'copy-htmls', 'compile'], fun
   });
 });
 
-gulp.task('reload', ['compile', 'copy-htmls'], function () {
-  gulp.src(paths.htmls).pipe(connect.reload());
+gulp.task('reload', ['compile', 'copy-resources'], function () {
+  gulp.src(paths.resources).pipe(connect.reload());
 });
 
 gulp.task('watch', function(cb) {
   var allSrcs = paths.purescripts
     .concat(paths.bowerSrc)
     .concat(paths.javascripts)
-    .concat(paths.htmls)
+    .concat(paths.resources)
     ;
   doConnect();
   gulp.watch(allSrcs, function() {
