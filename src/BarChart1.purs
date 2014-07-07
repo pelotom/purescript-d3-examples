@@ -50,5 +50,5 @@ main = do
     .. selectAll "div"
       .. bind table
     .. enter .. append "div"
-      .. style "width" (\d -> show (x d) ++ "px")
-      .. text show
+      .. style' "width" (\d -> show (x d) ++ "px")
+      .. text' show

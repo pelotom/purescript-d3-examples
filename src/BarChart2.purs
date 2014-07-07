@@ -73,7 +73,7 @@ main = do
     .. range [0, width]
 
   chart <- rootSelect ".chart"
-    .. attr "width" (const width)
+    .. attr "width" width
 
   tsv "data/namesAndNumbers.tsv" \(Right array) -> do
     typedData <- traverse coerceNameAndValue array
@@ -81,19 +81,19 @@ main = do
     xScale ... domain [0, maxBy (\d -> d.value) typedData]
     x <- freeze xScale
 
-    chart ... attr "height" (const $ barHeight * length typedData)
+    chart ... attr "height" (barHeight * length typedData)
 
     bar <- chart ... selectAll "g"
         .. bind typedData
       .. enter .. append "g"
-        .. attr' "transform" (\_ i -> "translate(0," ++ show (i * barHeight) ++ ")")
+        .. attr'' "transform" (\_ i -> "translate(0," ++ show (i * barHeight) ++ ")")
 
     bar ... append "rect"
-      .. attr "width" (\d -> x d.value)
-      .. attr "height" (const $ barHeight - 1)
+      .. attr' "width" (\d -> x d.value)
+      .. attr  "height" (barHeight - 1)
 
     bar ... append "text"
-      .. attr "x" (\d -> x d.value - 3)
-      .. attr "y" (const $ barHeight / 2)
-      .. attr "dy" (const ".35em")
-      .. text (\d -> show d.value)
+      .. attr' "x" (\d -> x d.value - 3)
+      .. attr  "y" (barHeight / 2)
+      .. attr  "dy" ".35em"
+      .. text' (\d -> show d.value)

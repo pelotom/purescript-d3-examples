@@ -114,10 +114,10 @@ main = do
     .. tickFormat "%"
 
   svg <- rootSelect "body" .. append "svg"
-    .. attr "width" (const $ width + margin.left + margin.right)
-    .. attr "height" (const $ height + margin.top + margin.bottom)
+    .. attr "width" (width + margin.left + margin.right)
+    .. attr "height" (height + margin.top + margin.bottom)
     .. append "g"
-      .. attr "transform" (const $ "translate(" ++ show margin.left ++ "," ++ show margin.top ++ ")")
+      .. attr "transform" ("translate(" ++ show margin.left ++ "," ++ show margin.top ++ ")")
 
   tsv "data/lettersAndFrequencies.tsv" \(Right array) -> do
     typedData <- traverse coerceLetterAndFrequency array
@@ -130,25 +130,25 @@ main = do
     barWidth <- rangeBand xScale
 
     svg ... append "g"
-      .. attr "class" (const "x axis")
-      .. attr "transform" (const $ "translate(0," ++ show height ++ ")")
+      .. attr "class" "x axis"
+      .. attr "transform" ("translate(0," ++ show height ++ ")")
       .. renderAxis xAxis
 
     svg ... append "g"
-        .. attr "class" (const "y axis")
+        .. attr "class" "y axis"
         .. renderAxis yAxis
-      .. append "text"
-        .. attr "transform" (const "rotate(-90)")
-        .. attr "y" (const 6)
-        .. attr "dy" (const ".71em")
-        .. style "text-anchor" (const "end")
-        .. text (const "Frequency")
+      .. append   "text"
+        .. attr   "transform" "rotate(-90)"
+        .. attr   "y" 6
+        .. attr   "dy" ".71em"
+        .. style  "text-anchor" "end"
+        .. text   "Frequency"
 
     svg ... selectAll ".bar"
         .. bind typedData
       .. enter .. append "rect"
-        .. attr "class" (const "bar")
-        .. attr "x" (x <<< letter)
-        .. attr "width" (const barWidth)
-        .. attr "y" (y <<< frequency)
-        .. attr "height" (\d -> height - y d.frequency)
+        .. attr  "class" "bar"
+        .. attr' "x" (x <<< letter)
+        .. attr  "width" barWidth
+        .. attr' "y" (y <<< frequency)
+        .. attr' "height" (\d -> height - y d.frequency)
