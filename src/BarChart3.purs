@@ -2,7 +2,7 @@ module Graphics.D3.Examples.BarChart3 where
 
 import Data.Either
 import Data.Maybe
-import Data.Array (length, (!!))
+import Data.Array (length, map)
 import Data.Traversable
 import Data.Foreign
 import Data.Foreign.EasyFFI
@@ -123,7 +123,7 @@ main = do
     typedData <- traverse coerceLetterAndFrequency array
 
     xScale ... domain (letter <$> typedData)
-    yScale ... domain [0, maxBy frequency typedData]
+    yScale ... domain [0, max frequency typedData]
 
     x <- toFunction xScale
     y <- toFunction yScale

@@ -2,7 +2,7 @@ module Graphics.D3.Examples.BarChart2 where
 
 import Data.Either
 import Data.Maybe
-import Data.Array (length)
+import Data.Array (length, map)
 import Data.Traversable
 import Data.Foreign
 import Data.Foreign.EasyFFI
@@ -78,7 +78,7 @@ main = do
   tsv "data/namesAndNumbers.tsv" \(Right array) -> do
     typedData <- traverse coerceNameAndValue array
 
-    x <- xScale ... domain [0, maxBy (\d -> d.value) typedData]
+    x <- xScale ... domain [0, max (\d -> d.value) typedData]
       .. toFunction
 
     chart ... attr "height" (barHeight * length typedData)
