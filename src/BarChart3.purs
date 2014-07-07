@@ -125,8 +125,8 @@ main = do
     xScale ... domain (letter <$> typedData)
     yScale ... domain [0, maxBy frequency typedData]
 
-    x <- freeze xScale
-    y <- freeze yScale
+    x <- toFunction xScale
+    y <- toFunction yScale
     barWidth <- rangeBand xScale
 
     svg ... append "g"

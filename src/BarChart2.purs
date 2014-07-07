@@ -78,8 +78,8 @@ main = do
   tsv "data/namesAndNumbers.tsv" \(Right array) -> do
     typedData <- traverse coerceNameAndValue array
 
-    xScale ... domain [0, maxBy (\d -> d.value) typedData]
-    x <- freeze xScale
+    x <- xScale ... domain [0, maxBy (\d -> d.value) typedData]
+      .. toFunction
 
     chart ... attr "height" (barHeight * length typedData)
 
