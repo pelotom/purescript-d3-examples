@@ -86,8 +86,8 @@ function type(d) {
 
 type LetterAndFrequency = { letter :: String, frequency :: Number }
 
-coerceData :: forall a. a -> D3Eff LetterAndFrequency
-coerceData = unsafeForeignFunction ["x", ""] "{ letter: x.letter, frequency: Number(x.frequency) }"
+coerceDatum :: forall a. a -> D3Eff LetterAndFrequency
+coerceDatum = unsafeForeignFunction ["x", ""] "{ letter: x.letter, frequency: Number(x.frequency) }"
 
 margin = {top: 20, right: 20, bottom: 30, left: 40}
 width = 960 - margin.left - margin.right
@@ -120,7 +120,7 @@ main = do
       .. attr "transform" ("translate(" ++ show margin.left ++ "," ++ show margin.top ++ ")")
 
   tsv "data/lettersAndFrequencies.tsv" \(Right array) -> do
-    typedData <- traverse coerceData array
+    typedData <- traverse coerceDatum array
 
     xScale ... domain (letter <$> typedData)
     yScale ... domain [0, max frequency typedData]
