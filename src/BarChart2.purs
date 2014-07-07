@@ -61,8 +61,8 @@ function type(d) {
 
 type NameAndValue = { name :: String, value :: Number }
 
-coerceNameAndValue :: forall a. a -> D3Eff NameAndValue
-coerceNameAndValue = unsafeForeignFunction ["x", ""] "{ name: x.name, value: Number(x.value) }"
+coerceData :: forall a. a -> D3Eff NameAndValue
+coerceData = unsafeForeignFunction ["x", ""] "{ name: x.name, value: Number(x.value) }"
 
 width = 420
 barHeight = 20
@@ -76,7 +76,7 @@ main = do
     .. attr "width" width
 
   tsv "data/namesAndNumbers.tsv" \(Right array) -> do
-    typedData <- traverse coerceNameAndValue array
+    typedData <- traverse coerceData array
 
     x <- xScale ... domain [0, max (\d -> d.value) typedData]
       .. toFunction
