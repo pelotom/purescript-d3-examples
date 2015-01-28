@@ -1,10 +1,8 @@
 module Graphics.D3.Examples.BarChart2 where
 
 import Data.Either
-import Data.Maybe
 import Data.Array (length, map)
 import Data.Traversable
-import Data.Foreign
 import Data.Foreign.EasyFFI
 
 import Graphics.D3.Base
@@ -12,7 +10,6 @@ import Graphics.D3.Util
 import Graphics.D3.Selection
 import Graphics.D3.Scale
 import Graphics.D3.Request
-import Graphics.D3.SVG.Axis
 
 -- | This is a PureScript adaptation of part 2 of Mike Bostock's "Let's Make a Bar Chart" series:
 -- | http://bost.ocks.org/mike/bar/2/

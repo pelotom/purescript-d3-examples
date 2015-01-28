@@ -1,7 +1,6 @@
 module Graphics.D3.Examples.BarChart3 where
 
 import Data.Either
-import Data.Maybe
 import Data.Array (length, map)
 import Data.Traversable
 import Data.Foreign
