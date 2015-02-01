@@ -83,7 +83,7 @@ type GraphData =
   , links :: [Link]
   }
 
-type Node = { x :: Number, y :: Number, text :: String }
+type Node = { x :: Number, y :: Number }
 type Link = { x :: Number, y :: Number }
 
 main :: forall eff. Eff (trace :: Trace, d3 :: D3 | eff) Unit
@@ -148,11 +148,6 @@ dataHandler force svg drag (Right r) = do
   append "circle" node
     .. attr "r" 12
 
-  append "text" node
-    .. attr "x" 12
-    .. attr "dy" ".35em"
-    .. text' getText
-
   force ... nodes v.nodes
     .. links v.links
     .. start
@@ -174,9 +169,6 @@ toTranslate :: forall o. o -> String
 toTranslate =
   ffi ["o"]
   "'translate(' + o.x + ',' + o.y + ')'"
-
-getText :: forall r. { text :: String | r } -> String
-getText o = o.text
 
 getX :: forall o. o -> Number
 getX = ffi ["o"] "o.x"
