@@ -84,77 +84,54 @@ type GraphData =
   }
 
 type Node = { x :: Number, y :: Number }
-type Link = { x :: Number, y :: Number }
+type Link = { source :: Node, target :: Node }
 
 main :: forall eff. Eff (trace :: Trace, d3 :: D3 | eff) Unit
 main = do
+  let canvasWidth = 960
+      canvasHeight = 500
+
   force <- forceLayout
-        .. size { width: canvasWidth, height: canvasHeight }
-        .. charge (-400)
-        .. linkDistance 40
+    .. size { width: canvasWidth, height: canvasHeight }
+    .. charge (-400)
+    .. linkDistance 40
 
   drag <- force ... drag
-       .. onDragStart dragStartHandler
+    .. onDragStart dragStartHandler
 
   svg <- rootSelect "body"
-      .. append "svg"
-      .. attr "width" canvasWidth
-      .. attr "height" canvasHeight
+    .. append "svg"
+    .. attr "width" canvasWidth
+    .. attr "height" canvasHeight
 
-  json dataUrl (dataHandler force svg drag)
+  json "data/graph.json" \(Right v) -> do
+    let graph = toGraphData v
 
-  return unit
+    force ... nodes graph.nodes
+      .. links graph.links
+      .. start
 
-tickHandler :: forall eff e a b.
-               (Existing e)
-            => e a
-            -> e b
-            -> _
-            -> Eff (d3 :: D3 | eff) Unit
-tickHandler link node e = do
-  link ... attr' "x1" getSourceX
-    .. attr' "y1" getSourceY
-    .. attr' "x2" getTargetX
-    .. attr' "y2" getTargetY
+    link <- svg ... selectAll ".link"
+        .. bind graph.links
+      .. enter .. append "line"
+        .. attr "class" "link"
 
-  node ... attr' "cx" getX
-    .. attr' "cy" getY
-    .. attr' "transform" toTranslate
+    node <- svg ... selectAll ".node"
+        .. bind graph.nodes
+      .. enter .. append "circle"
+        .. attr "class" "node"
+        .. attr "r" 12
+        .. onDoubleClick doubleClickHandler
+        .. createDrag drag
+    
+    force ... onTick \_ -> do
+      link ... attr' "x1" (\d -> d.source.x)
+        .. attr' "y1" (\d -> d.source.y)
+        .. attr' "x2" (\d -> d.target.x)
+        .. attr' "y2" (\d -> d.target.y)
 
-  return unit
-
-dataHandler :: forall eff a.
-               ForceLayout
-            -> Selection a
-            -> ForceLayout
-            -> Either RequestError Foreign
-            -> Eff (trace :: Trace, d3 :: D3 | eff) Unit
-dataHandler _ _ drag (Left s) = trace $ "Error: " ++ s.statusText
-dataHandler force svg drag (Right r) = do
-  let v = toGraphData r
-
-  link <- svg ... selectAll ".link"
-      .. bind v.links
-    .. enter .. append "line"
-      .. attr "class" "link"
-
-  node <- svg ... selectAll ".node"
-       .. bind v.nodes
-    .. enter .. append "g"
-      .. attr "class" "node"
-      .. onDoubleClick doubleClickHandler
-      .. createDrag drag
-
-  append "circle" node
-    .. attr "r" 12
-
-  force ... nodes v.nodes
-    .. links v.links
-    .. start
-
-  onTick (tickHandler link node) force
-
-  trace "Handler done"
+      node ... attr' "cx" (\d -> d.x)
+        .. attr' "cy" (\d -> d.y)
 
 dragStartHandler :: forall d. d -> D3Eff Unit
 dragStartHandler = ffi ["d"] "d3.select(this).classed(\"fixed\", d.fixed = true);"
@@ -164,37 +141,5 @@ doubleClickHandler = ffi ["d"] "d3.select(this).classed(\"fixed\", d.fixed = fal
 
 toGraphData :: Foreign -> GraphData
 toGraphData = ffi ["g"] "g"
-
-toTranslate :: forall o. o -> String
-toTranslate =
-  ffi ["o"]
-  "'translate(' + o.x + ',' + o.y + ')'"
-
-getX :: forall o. o -> Number
-getX = ffi ["o"] "o.x"
-
-getY :: forall o. o -> Number
-getY = ffi ["o"] "o.y"
-
-getSourceX :: forall o. o -> Number
-getSourceX = ffi ["o"] "o.source.x"
-
-getSourceY :: forall o. o -> Number
-getSourceY = ffi ["o"] "o.source.y"
-
-getTargetX :: forall o. o -> Number
-getTargetX = ffi ["o"] "o.target.x"
-
-getTargetY :: forall o. o -> Number
-getTargetY = ffi ["o"] "o.target.y"
-
-canvasWidth :: Number
-canvasWidth = 800
-
-canvasHeight :: Number
-canvasHeight = 600
-
-dataUrl :: String
-dataUrl = "data/graph.json"
 
 ffi = unsafeForeignFunction
