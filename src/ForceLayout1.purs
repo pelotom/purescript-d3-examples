@@ -12,7 +12,7 @@ import Graphics.D3.Scale
 import Graphics.D3.Selection
 import Graphics.D3.Util
 
--- | This is a PureScrit adaptation of the Sticky Force Layout example:
+-- | This is a PureScript adaptation of the Sticky Force Layout example:
 -- | http://bl.ocks.org/mbostock/3750558
 
 {-
