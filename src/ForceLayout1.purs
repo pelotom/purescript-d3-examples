@@ -134,10 +134,10 @@ main = do
         .. attr' "cy" (\d -> d.y)
 
 dragStartHandler :: forall d. d -> D3Eff Unit
-dragStartHandler = ffi ["d"] "d3.select(this).classed(\"fixed\", d.fixed = true);"
+dragStartHandler = ffi ["d"] "d3.select(this).classed('fixed', d.fixed = true);"
 
 doubleClickHandler :: forall d. d -> D3Eff Unit
-doubleClickHandler = ffi ["d"] "d3.select(this).classed(\"fixed\", d.fixed = false);"
+doubleClickHandler = ffi ["d"] "d3.select(this).classed('fixed', d.fixed = false);"
 
 toGraphData :: Foreign -> GraphData
 toGraphData = ffi ["g"] "g"
