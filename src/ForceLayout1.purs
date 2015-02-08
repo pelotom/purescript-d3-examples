@@ -6,6 +6,7 @@ import Data.Foreign
 import Data.Foreign.EasyFFI
 import Debug.Trace
 import Graphics.D3.Base
+import Graphics.D3.Layout.Base
 import Graphics.D3.Layout.Force
 import Graphics.D3.Request
 import Graphics.D3.Scale
