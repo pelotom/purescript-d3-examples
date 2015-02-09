@@ -126,13 +126,15 @@ main = do
         .. createDrag drag
     
     force ... onTick \_ -> do
-      link ... attr' "x1" (\d -> d.source.x)
+      link
+       ... attr' "x1" (\d -> d.source.x)
         .. attr' "y1" (\d -> d.source.y)
         .. attr' "x2" (\d -> d.target.x)
         .. attr' "y2" (\d -> d.target.y)
 
-      node ... attr' "cx" (\d -> d.x)
-        .. attr' "cy" (\d -> d.y)
+      node
+       ... attr' "cx" (.x)
+        .. attr' "cy" (.y)
 
 dragStartHandler :: forall d. d -> D3Eff Unit
 dragStartHandler = ffi ["d"] "d3.select(this).classed('fixed', d.fixed = true);"
