@@ -108,7 +108,8 @@ main = do
   json "data/graph.json" \(Right v) -> do
     let graph = toGraphData v
 
-    force ... nodes graph.nodes
+    force
+     ... nodes graph.nodes
       .. links graph.links
       .. start
 
