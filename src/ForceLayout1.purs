@@ -134,8 +134,8 @@ main = do
         .. attr' "y2" (\d -> d.target.y)
 
       node
-       ... attr' "cx" (.x)
-        .. attr' "cy" (.y)
+       ... attr' "cx" _.x
+        .. attr' "cy" _.y
 
 dragStartHandler :: forall d. d -> D3Eff Unit
 dragStartHandler = ffi ["d"] "d3.select(this).classed('fixed', d.fixed = true);"

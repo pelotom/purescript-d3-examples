@@ -75,7 +75,7 @@ main = do
   tsv "data/namesAndNumbers.tsv" \(Right array) -> do
     typedData <- traverse coerceDatum array
 
-    x <- xScale ... domain [0, max (.value) typedData]
+    x <- xScale ... domain [0, max _.value typedData]
       .. toFunction
 
     chart ... attr "height" (barHeight * length typedData)
@@ -86,11 +86,11 @@ main = do
         .. attr'' "transform" (\_ i -> "translate(0," ++ show (i * barHeight) ++ ")")
 
     bar ... append "rect"
-      .. attr' "width" ((.value) >>> x)
+      .. attr' "width" (_.value >>> x)
       .. attr  "height" (barHeight - 1)
 
     bar ... append "text"
       .. attr' "x" (\d -> x d.value - 3)
       .. attr  "y" (barHeight / 2)
       .. attr  "dy" ".35em"
-      .. text' ((.value) >>> show)
+      .. text' (_.value >>> show)
