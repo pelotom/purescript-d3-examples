@@ -2,6 +2,6 @@
   "name": "purescript-d3-examples",
   "ignore": [],
   "dependencies":
-  { "purescript-d3" : "https://github.com/pelotom/purescript-d3#master"
+  { "purescript-d3" : "pelotom/purescript-d3#master"
   }
 }
