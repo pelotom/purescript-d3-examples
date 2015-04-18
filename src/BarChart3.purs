@@ -122,7 +122,7 @@ main = do
     typedData <- traverse coerceDatum array
 
     xScale ... domain (letter <$> typedData)
-    yScale ... domain [0, max frequency typedData]
+    yScale ... domain [0, max' frequency typedData]
 
     x <- toFunction xScale
     y <- toFunction yScale
