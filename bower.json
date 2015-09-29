@@ -3,7 +3,7 @@
   "ignore": [],
   "dependencies": {
     "purescript-d3": "pelotom/purescript-d3#master",
-    "purescript-console": "~0.1.0",
-    "purescript-integers": "~0.2.0"
+    "purescript-console": "^0.1.0",
+    "purescript-integers": "^0.2.0"
   }
 }
