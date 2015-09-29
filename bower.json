@@ -1,7 +1,9 @@
 {
   "name": "purescript-d3-examples",
   "ignore": [],
-  "dependencies":
-  { "purescript-d3" : "pelotom/purescript-d3#master"
+  "dependencies": {
+    "purescript-d3": "pelotom/purescript-d3#master",
+    "purescript-console": "^0.1.0",
+    "purescript-integers": "^0.2.0"
   }
 }

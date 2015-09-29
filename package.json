@@ -5,7 +5,7 @@
   "devDependencies": {
     "gulp": "^3.8.1",
     "gulp-connect": "^2.0.5",
-    "gulp-purescript": "0.0.9",
+    "gulp-purescript": "^0.5.0",
     "rimraf": "^2.2.8"
   }
 }

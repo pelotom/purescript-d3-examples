@@ -1,7 +1,8 @@
 module Graphics.D3.Examples.BarChart3 where
 
+import Prelude(map,(-),(+),(++),show,(<$>),(<<<),bind)
 import Data.Either
-import Data.Array (length, map)
+import Data.Array (length)
 import Data.Traversable
 import Data.Foreign
 import Data.Foreign.EasyFFI
@@ -88,19 +89,19 @@ type LetterAndFrequency = { letter :: String, frequency :: Number }
 coerceDatum :: forall a. a -> D3Eff LetterAndFrequency
 coerceDatum = unsafeForeignFunction ["x", ""] "{ letter: x.letter, frequency: Number(x.frequency) }"
 
-margin = {top: 20, right: 20, bottom: 30, left: 40}
-width = 960 - margin.left - margin.right
-height = 500 - margin.top - margin.bottom
+margin = {top: 20.0, right: 20.0, bottom: 30.0, left: 40.0}
+width = 960.0 - margin.left - margin.right
+height = 500.0 - margin.top - margin.bottom
 letter x = x.letter
 frequency x = x.frequency
 
 main = do
 
   xScale <- ordinalScale
-    .. rangeRoundBands 0 width 0.1 0
+    .. rangeRoundBands 0.0 width 0.1 0.0
 
   yScale <- linearScale
-    .. range [height, 0]
+    .. range [height, 0.0]
 
   xAxis <- axis
     .. scale xScale
@@ -109,7 +110,7 @@ main = do
   yAxis <- axis
     .. scale yScale
     .. orient "left"
-    .. ticks 10
+    .. ticks 10.0
     .. tickFormat "%"
 
   svg <- rootSelect "body" .. append "svg"
@@ -122,7 +123,7 @@ main = do
     typedData <- traverse coerceDatum array
 
     xScale ... domain (letter <$> typedData)
-    yScale ... domain [0, max' frequency typedData]
+    yScale ... domain [0.0, max' frequency typedData]
 
     x <- toFunction xScale
     y <- toFunction yScale
@@ -138,13 +139,13 @@ main = do
         .. renderAxis yAxis
       .. append   "text"
         .. attr   "transform" "rotate(-90)"
-        .. attr   "y" 6
+        .. attr   "y" 6.0
         .. attr   "dy" ".71em"
         .. style  "text-anchor" "end"
         .. text   "Frequency"
 
     svg ... selectAll ".bar"
-        .. bind typedData
+        .. bindData typedData
       .. enter .. append "rect"
         .. attr  "class" "bar"
         .. attr' "x" (x <<< letter)

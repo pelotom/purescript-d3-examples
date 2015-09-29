@@ -1,9 +1,11 @@
 module Graphics.D3.Examples.BarChart2 where
 
+import Prelude(map,(*),(++),show,(>>>),(-),(/),bind,($))
 import Data.Either
-import Data.Array (length, map)
+import Data.Array (length)
 import Data.Traversable
 import Data.Foreign.EasyFFI
+import Data.Int
 
 import Graphics.D3.Base
 import Graphics.D3.Util
@@ -61,13 +63,13 @@ type NameAndValue = { name :: String, value :: Number }
 coerceDatum :: forall a. a -> D3Eff NameAndValue
 coerceDatum = unsafeForeignFunction ["x", ""] "{ name: x.name, value: Number(x.value) }"
 
-width = 420
-barHeight = 20
+width = 420.0
+barHeight = 20.0
 
 main = do
 
   xScale <- linearScale
-    .. range [0, width]
+    .. range [0.0, width]
 
   chart <- rootSelect ".chart"
     .. attr "width" width
@@ -75,22 +77,22 @@ main = do
   tsv "data/namesAndNumbers.tsv" \(Right array) -> do
     typedData <- traverse coerceDatum array
 
-    x <- xScale ... domain [0, max' _.value typedData]
+    x <- xScale ... domain [0.0, max' _.value typedData]
       .. toFunction
 
-    chart ... attr "height" (barHeight * length typedData)
+    chart ... attr "height" (barHeight * (toNumber $ length typedData))
 
     bar <- chart ... selectAll "g"
-        .. bind typedData
+        .. bindData typedData
       .. enter .. append "g"
         .. attr'' "transform" (\_ i -> "translate(0," ++ show (i * barHeight) ++ ")")
 
     bar ... append "rect"
       .. attr' "width" (_.value >>> x)
-      .. attr  "height" (barHeight - 1)
+      .. attr  "height" (barHeight - 1.0)
 
     bar ... append "text"
-      .. attr' "x" (\d -> x d.value - 3)
-      .. attr  "y" (barHeight / 2)
+      .. attr' "x" (\d -> x d.value - 3.0)
+      .. attr  "y" ( barHeight / 2.0 )
       .. attr  "dy" ".35em"
       .. text' (_.value >>> show)

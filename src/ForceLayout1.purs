@@ -4,7 +4,6 @@ import Control.Monad.Eff
 import Data.Either
 import Data.Foreign
 import Data.Foreign.EasyFFI
-import Debug.Trace
 import Graphics.D3.Base
 import Graphics.D3.Layout.Base
 import Graphics.D3.Layout.Force
@@ -12,6 +11,7 @@ import Graphics.D3.Request
 import Graphics.D3.Scale
 import Graphics.D3.Selection
 import Graphics.D3.Util
+import Prelude(Unit(),bind)
 
 -- | This is a PureScript adaptation of the Sticky Force Layout example:
 -- | http://bl.ocks.org/mbostock/3750558
@@ -80,22 +80,22 @@ function dragstart(d) {
   -}
 
 type GraphData =
-  { nodes :: [Node]
-  , links :: [Link]
+  { nodes :: Array Node
+  , links :: Array Link
   }
 
 type Node = { x :: Number, y :: Number }
 type Link = { source :: Node, target :: Node }
 
-main :: forall eff. Eff (trace :: Trace, d3 :: D3 | eff) Unit
+main :: forall eff. Eff (d3 :: D3 | eff) Unit
 main = do
-  let canvasWidth = 960
-      canvasHeight = 500
+  let canvasWidth = 960.0
+      canvasHeight = 500.0
 
   force <- forceLayout
     .. size { width: canvasWidth, height: canvasHeight }
-    .. charge (-400)
-    .. linkDistance 40
+    .. charge (-400.0)
+    .. linkDistance 40.0
 
   drag <- force ... drag
     .. onDragStart dragStartHandler
@@ -114,18 +114,18 @@ main = do
       .. start
 
     link <- svg ... selectAll ".link"
-        .. bind graph.links
+        .. bindData graph.links
       .. enter .. append "line"
         .. attr "class" "link"
 
     node <- svg ... selectAll ".node"
-        .. bind graph.nodes
+        .. bindData graph.nodes
       .. enter .. append "circle"
         .. attr "class" "node"
-        .. attr "r" 12
+        .. attr "r" 12.0
         .. onDoubleClick doubleClickHandler
         .. createDrag drag
-    
+
     force ... onTick \_ -> do
       link
        ... attr' "x1" (\d -> d.source.x)

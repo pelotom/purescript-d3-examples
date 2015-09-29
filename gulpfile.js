@@ -9,30 +9,34 @@ var gulp      	= require('gulp')
 var jsFileName = 'examples.js';
 
 var paths = {
-	purescripts: ['src/*.purs'],
-	javascripts: ['src/' + jsFileName],
+	purescripts: 'src/*.purs',
+	javascripts: 'src/' + jsFileName,
   resources: ['resources/**/*'],
-	bowerSrc: [
-	  'bower_components/purescript-*/src/**/*.purs'
-	]
+	bowerSrc: 'bower_components/purescript-*/src/**/*.purs',
+  ffi: 'bower_components/purescript-*/src/**/*.js',
 };
 
 gulp.task('compile', function(cb) {
 	var psc = purescript.psc({
 		// Compiler options
-		output: "examples.js",
+    src: [paths.purescripts, paths.bowerSrc],
+    ffi: paths.ffi,
+		output: "output",
     module: "Graphics.D3.Examples"
 	});
-  psc.on('error', function(e) {
-    cb(e.message); // Build failed
+  return psc;
+});
+
+gulp.task('bundle', ['compile'], function() {
+  return purescript.pscBundle({
+    src: 'output/**/*.js',
+    output: 'app/examples.js',
+    module: [
+      'Graphics.D3.Examples.BarChart1',
+      'Graphics.D3.Examples.BarChart2',
+      'Graphics.D3.Examples.BarChart3',
+      'Graphics.D3.Examples.ForceLayout1']
   });
-  gulp.src(paths.purescripts.concat(paths.bowerSrc))
-    .pipe(psc)
-    .pipe(gulp.dest("app"))
-    .on('data', function () {
-      cb(); // Completed successfully
-    })
-    ;
 });
 
 gulp.task('copy-d3', function() {
@@ -47,7 +51,7 @@ gulp.task('copy-resources', ['clean-resources'], function () {
   return gulp.src('resources/**/*').pipe(gulp.dest('app'));
 });
 
-var connectTask = gulp.task('connect', ['copy-d3', 'copy-resources', 'compile'], function() {
+var connectTask = gulp.task('connect', ['copy-d3', 'copy-resources', 'bundle'], function() {
   connect.server({
     root: 'app',
     port: 8083,
@@ -55,7 +59,7 @@ var connectTask = gulp.task('connect', ['copy-d3', 'copy-resources', 'compile'],
   });
 });
 
-gulp.task('reload', ['compile', 'copy-resources'], function () {
+gulp.task('reload', ['bundle', 'copy-resources'], function () {
   gulp.src(paths.resources).pipe(connect.reload());
 });
 
