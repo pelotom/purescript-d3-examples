@@ -83,7 +83,7 @@ main = do
     chart ... attr "height" (barHeight * (toNumber $ length typedData))
 
     bar <- chart ... selectAll "g"
-        .. bind_ typedData
+        .. bindData typedData
       .. enter .. append "g"
         .. attr'' "transform" (\_ i -> "translate(0," ++ show (i * barHeight) ++ ")")
 

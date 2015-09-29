@@ -39,7 +39,7 @@ main = do
 
   rootSelect ".chart"
     .. selectAll "div"
-      .. bind_ array
+      .. bindData array
     .. enter .. append "div"
       .. style' "width" (\d -> show (x d) ++ "px")
       .. text' show

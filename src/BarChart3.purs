@@ -145,7 +145,7 @@ main = do
         .. text   "Frequency"
 
     svg ... selectAll ".bar"
-        .. bind_ typedData
+        .. bindData typedData
       .. enter .. append "rect"
         .. attr  "class" "bar"
         .. attr' "x" (x <<< letter)

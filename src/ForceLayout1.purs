@@ -114,12 +114,12 @@ main = do
       .. start
 
     link <- svg ... selectAll ".link"
-        .. bind_ graph.links
+        .. bindData graph.links
       .. enter .. append "line"
         .. attr "class" "link"
 
     node <- svg ... selectAll ".node"
-        .. bind_ graph.nodes
+        .. bindData graph.nodes
       .. enter .. append "circle"
         .. attr "class" "node"
         .. attr "r" 12.0
