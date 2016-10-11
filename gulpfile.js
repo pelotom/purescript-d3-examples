@@ -20,7 +20,7 @@ gulp.task('compile', function(cb) {
 	var psc = purescript.psc({
 		// Compiler options
     src: [paths.purescripts, paths.bowerSrc],
-    ffi: paths.ffi,
+
 		output: "output",
     module: "Graphics.D3.Examples"
 	});

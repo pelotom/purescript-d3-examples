@@ -11,7 +11,7 @@ import Graphics.D3.Request
 import Graphics.D3.Scale
 import Graphics.D3.Selection
 import Graphics.D3.Util
-import Prelude(Unit(),bind)
+import Prelude(Unit(),bind,negate)
 
 -- | This is a PureScript adaptation of the Sticky Force Layout example:
 -- | http://bl.ocks.org/mbostock/3750558

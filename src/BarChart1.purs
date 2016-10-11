@@ -1,6 +1,6 @@
 module Graphics.D3.Examples.BarChart1 where
 
-import Prelude(id,(++),show,return,unit,Unit(),(>>=),bind)
+import Prelude(id,(<>),show,unit,Unit(),(>>=),bind)
 import Graphics.D3.Base
 import Graphics.D3.Util
 import Graphics.D3.Selection
@@ -41,5 +41,5 @@ main = do
     .. selectAll "div"
       .. bindData array
     .. enter .. append "div"
-      .. style' "width" (\d -> show (x d) ++ "px")
+      .. style' "width" (\d -> show (x d) <> "px")
       .. text' show
