@@ -1,6 +1,6 @@
 module Graphics.D3.Examples.BarChart2 where
 
-import Prelude(map,(*),(++),show,(>>>),(-),(/),bind,($))
+import Prelude(map,(*),(<>),show,(>>>),(-),(/),bind,($))
 import Data.Either
 import Data.Array (length)
 import Data.Traversable
@@ -85,7 +85,7 @@ main = do
     bar <- chart ... selectAll "g"
         .. bindData typedData
       .. enter .. append "g"
-        .. attr'' "transform" (\_ i -> "translate(0," ++ show (i * barHeight) ++ ")")
+        .. attr'' "transform" (\_ i -> "translate(0," <> show (i * barHeight) <> ")")
 
     bar ... append "rect"
       .. attr' "width" (_.value >>> x)

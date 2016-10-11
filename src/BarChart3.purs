@@ -1,6 +1,6 @@
 module Graphics.D3.Examples.BarChart3 where
 
-import Prelude(map,(-),(+),(++),show,(<$>),(<<<),bind)
+import Prelude(map,(-),(+),(<>),show,(<$>),(<<<),bind)
 import Data.Either
 import Data.Array (length)
 import Data.Traversable
@@ -117,7 +117,7 @@ main = do
     .. attr "width" (width + margin.left + margin.right)
     .. attr "height" (height + margin.top + margin.bottom)
     .. append "g"
-      .. attr "transform" ("translate(" ++ show margin.left ++ "," ++ show margin.top ++ ")")
+      .. attr "transform" ("translate(" <> show margin.left <> "," <> show margin.top <> ")")
 
   tsv "data/lettersAndFrequencies.tsv" \(Right array) -> do
     typedData <- traverse coerceDatum array
@@ -131,7 +131,7 @@ main = do
 
     svg ... append "g"
       .. attr "class" "x axis"
-      .. attr "transform" ("translate(0," ++ show height ++ ")")
+      .. attr "transform" ("translate(0," <> show height <> ")")
       .. renderAxis xAxis
 
     svg ... append "g"
